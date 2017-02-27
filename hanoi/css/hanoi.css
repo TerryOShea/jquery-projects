@@ -1,0 +1,42 @@
+body, ul{
+  margin: 0;
+  padding: 0;
+}
+
+h1{
+  text-align: center;
+}
+
+.hanoi{
+  display: flex;
+  margin:auto;
+  justify-content: space-between;
+  width: 330px;
+  border-bottom: 1px solid black;
+}
+
+ul{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style-type: none;
+  width: 100px;
+}
+
+li{
+  height: 50px;
+  border: 1px solid black;
+  margin: 0 10px;
+}
+
+.large{
+  width: 80px;
+}
+
+.medium{
+  width: 70px;
+}
+
+.little{
+  width: 60px;
+}
