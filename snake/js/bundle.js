@@ -72,18 +72,24 @@
 
 const Board = __webpack_require__(1);
 
-class View{
-  constructor($el){
+class View {
+  constructor($el) {
     this.el = $el;
     this.board = new Board($el);
-    this.buttonEl = $(".button");
+    this.paused = false;
+    this.score = 0;
+
+    this.playPauseEl = $(".play-pause-button");
+    this.playPauseIcon = $(".play-pause-button i");
     this.scoreEl = $(".score");
+
     this.snakeMoves = setInterval(()=> this.step(), 300);
     this.addListeners();
-    this.paused = false;
+    this.board.render();
   }
 
   addListeners() {
+    // turn the snake based on arrow key inputs
     $(document).keydown(e =>{
       e.preventDefault();
       switch(e.which) {
@@ -107,31 +113,36 @@ class View{
       }
     });
 
-    this.buttonEl.on('click', () => {
+    // listen for clicks on the pause/play button
+    this.playPauseEl.on('click', () => {
       if (!this.paused) {
         clearInterval(this.snakeMoves);
-        this.buttonEl.html('<i class="fa fa-play"></i>');
-        this.paused = true;
-      } else {
-        this.snakeMoves = setInterval(()=> this.step(), 300);
-        this.buttonEl.html('<i class="fa fa-pause"></i>');
-        this.paused = false;
       }
+      else {
+        this.snakeMoves = setInterval(()=> this.step(), 300);
+      }
+
+      this.paused = !this.paused;
+      this.playPauseIcon.toggleClass("fa-pause");
+      this.playPauseIcon.toggleClass("fa-play");
     });
   }
 
-  step(){
+  step() {
     this.board.snake.move();
+
     if (this.board.hitApple()) {
       this.board.snake.addOns = 3;
-      let score = parseInt(this.scoreEl.html());
-      this.scoreEl.html(`${score + 10}`);
+      this.score += 10;
+      this.scoreEl.html(`${this.score}`);
       this.board.resetApple();
     }
+
     if (this.board.isOver()) {
       clearInterval(this.snakeMoves);
-      alert("you lost!");
+      alert("You lost!");
     }
+
     this.board.render();
   }
 }
@@ -144,10 +155,15 @@ module.exports = View;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Snake = __webpack_require__(2);
-class Board{
-  constructor($el){
-    this.snake = new Snake();
 
+class Board {
+
+  constructor($el) {
+    this.snake = new Snake();
+    this.makeGrid($el);
+  }
+
+  makeGrid($el) {
     for (let i = 0; i < 20; i++) {
       let row = $(`<ul class="row-${i}"></ul>`);
       for (let j = 0; j < 20; j++) {
@@ -156,7 +172,6 @@ class Board{
       }
       $el.append(row);
     }
-
     this.resetApple();
   }
 
@@ -170,7 +185,7 @@ class Board{
 
   resetApple() {
     $(".apple").removeClass("apple");
-    this.apple = this.emptySpace();
+    this.apple = this.findEmpty();
     $(`li[pos="${this.apple[0]}, ${this.apple[1]}"]`).addClass("apple");
   }
 
@@ -194,16 +209,18 @@ class Board{
     return this.apple[0] === head[0] && this.apple[1] === head[1];
   }
 
-  emptySpace() {
-    let randomRow = Math.floor(Math.random() * 20);
-    let randomCol = Math.floor(Math.random() * 20);
-    while (this.snake.hasSnake([randomRow, randomCol])) {
+  findEmpty() {
+    let randomRow, randomCol;
+
+    while (!randomRow || this.snake.hasSnake([randomRow, randomCol])) {
       randomRow = Math.floor(Math.random() * 20);
       randomCol = Math.floor(Math.random() * 20);
     }
+
     return [randomRow, randomCol];
   }
 }
+
 module.exports = Board;
 
 
@@ -226,11 +243,12 @@ const oppositeDir = {
 };
 
 class Snake {
+
   constructor() {
     this.direction = "N";
     this.segments = [[10,10]];
-    this.addOns = 0;
-    this.removedTail = null;
+    this.addOns = 0; // after eating an apple, snake will add on 3 new scales
+    this.removedTail = null; // store the removed snake tail so it can be destyled
   }
 
   head() {
@@ -273,12 +291,11 @@ module.exports = Snake;
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const View = __webpack_require__(0); 
+const View = __webpack_require__(0);
 
-$( () => {
-  const $container = $('.snake');
+$(() => {
+  const $container = $('.snake-box');
   const v = new View($container);
-  v.board.render();
 });
 
 

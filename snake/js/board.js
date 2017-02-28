@@ -1,8 +1,13 @@
 const Snake = require("./snake.js");
-class Board{
-  constructor($el){
-    this.snake = new Snake();
 
+class Board {
+
+  constructor($el) {
+    this.snake = new Snake();
+    this.makeGrid($el);
+  }
+
+  makeGrid($el) {
     for (let i = 0; i < 20; i++) {
       let row = $(`<ul class="row-${i}"></ul>`);
       for (let j = 0; j < 20; j++) {
@@ -11,7 +16,6 @@ class Board{
       }
       $el.append(row);
     }
-
     this.resetApple();
   }
 
@@ -25,7 +29,7 @@ class Board{
 
   resetApple() {
     $(".apple").removeClass("apple");
-    this.apple = this.emptySpace();
+    this.apple = this.findEmpty();
     $(`li[pos="${this.apple[0]}, ${this.apple[1]}"]`).addClass("apple");
   }
 
@@ -49,14 +53,16 @@ class Board{
     return this.apple[0] === head[0] && this.apple[1] === head[1];
   }
 
-  emptySpace() {
-    let randomRow = Math.floor(Math.random() * 20);
-    let randomCol = Math.floor(Math.random() * 20);
-    while (this.snake.hasSnake([randomRow, randomCol])) {
+  findEmpty() {
+    let randomRow, randomCol;
+
+    while (!randomRow || this.snake.hasSnake([randomRow, randomCol])) {
       randomRow = Math.floor(Math.random() * 20);
       randomCol = Math.floor(Math.random() * 20);
     }
+
     return [randomRow, randomCol];
   }
 }
+
 module.exports = Board;

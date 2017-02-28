@@ -13,11 +13,12 @@ const oppositeDir = {
 };
 
 class Snake {
+
   constructor() {
     this.direction = "N";
     this.segments = [[10,10]];
-    this.addOns = 0;
-    this.removedTail = null;
+    this.addOns = 0; // after eating an apple, snake will add on 3 new scales
+    this.removedTail = null; // store the removed snake tail so it can be destyled
   }
 
   head() {

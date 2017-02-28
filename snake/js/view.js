@@ -1,17 +1,23 @@
 const Board = require("./board.js");
 
-class View{
-  constructor($el){
+class View {
+  constructor($el) {
     this.el = $el;
     this.board = new Board($el);
-    this.buttonEl = $(".button");
+    this.paused = false;
+    this.score = 0;
+
+    this.playPauseEl = $(".play-pause-button");
+    this.playPauseIcon = $(".play-pause-button i");
     this.scoreEl = $(".score");
+
     this.snakeMoves = setInterval(()=> this.step(), 300);
     this.addListeners();
-    this.paused = false;
+    this.board.render();
   }
 
   addListeners() {
+    // turn the snake based on arrow key inputs
     $(document).keydown(e =>{
       e.preventDefault();
       switch(e.which) {
@@ -35,31 +41,36 @@ class View{
       }
     });
 
-    this.buttonEl.on('click', () => {
+    // listen for clicks on the pause/play button
+    this.playPauseEl.on('click', () => {
       if (!this.paused) {
         clearInterval(this.snakeMoves);
-        this.buttonEl.html('<i class="fa fa-play"></i>');
-        this.paused = true;
-      } else {
-        this.snakeMoves = setInterval(()=> this.step(), 300);
-        this.buttonEl.html('<i class="fa fa-pause"></i>');
-        this.paused = false;
       }
+      else {
+        this.snakeMoves = setInterval(()=> this.step(), 300);
+      }
+
+      this.paused = !this.paused;
+      this.playPauseIcon.toggleClass("fa-pause");
+      this.playPauseIcon.toggleClass("fa-play");
     });
   }
 
-  step(){
+  step() {
     this.board.snake.move();
+
     if (this.board.hitApple()) {
       this.board.snake.addOns = 3;
-      let score = parseInt(this.scoreEl.html());
-      this.scoreEl.html(`${score + 10}`);
+      this.score += 10;
+      this.scoreEl.html(`${this.score}`);
       this.board.resetApple();
     }
+
     if (this.board.isOver()) {
       clearInterval(this.snakeMoves);
-      alert("you lost!");
+      alert("You lost!");
     }
+
     this.board.render();
   }
 }

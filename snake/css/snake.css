@@ -8,10 +8,8 @@ header {
   align-items: center;
   justify-content: center;
   position: relative;
-}
-
-button {
-  border: none;
+  width: 410px;
+  margin: 0 auto;
 }
 
 h1 {
@@ -19,17 +17,17 @@ h1 {
 }
 
 .score {
+  font: 32px 'Supermercado One', cursive;
   width: 50px;
   height: 50px;
   background: cornflowerblue;
   position: absolute;
-  right: 40vw;
-  font: 32px 'Supermercado One', cursive;
+  right: 0;
   line-height: 50px;
   text-align: center;
 }
 
-.snake {
+.snake-box {
   margin: auto;
   border: 5px solid black;
   width: 400px;
@@ -57,15 +55,20 @@ li {
   background: red;
 }
 
-.button {
-  font-size: 36px;
-  display: block;
-  margin: 0 auto;
-  text-align: center;
-  margin-top: 20px;
+.play-pause-button {
+  border: none;
+  font-size: 32px;
+  margin: 20px auto;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.button:hover {
+.play-pause-button:focus { outline: none; }
+
+.play-pause-button:hover {
   cursor: pointer;
   background: cornflowerblue;
 }
