@@ -1,4 +1,4 @@
-const View = require('./view.js'); // require appropriate file
+const View = require('./view.js'); 
 
 $( () => {
   const $container = $('.snake');

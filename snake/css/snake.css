@@ -10,6 +10,10 @@ header {
   position: relative;
 }
 
+button {
+  border: none;
+}
+
 h1 {
   font: 60px 'Supermercado One', cursive;
 }
@@ -51,4 +55,17 @@ li {
 
 .apple {
   background: red;
+}
+
+.button {
+  font-size: 36px;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button:hover {
+  cursor: pointer;
+  background: cornflowerblue;
 }

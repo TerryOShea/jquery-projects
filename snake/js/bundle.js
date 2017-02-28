@@ -70,7 +70,7 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const View = __webpack_require__(1); // require appropriate file
+const View = __webpack_require__(1); 
 
 $( () => {
   const $container = $('.snake');
@@ -89,6 +89,14 @@ class View{
   constructor($el){
     this.el = $el;
     this.board = new Board($el);
+    this.buttonEl = $(".button");
+    this.scoreEl = $(".score");
+    this.snakeMoves = setInterval(()=> this.step(), 300);
+    this.addListeners();
+    this.paused = false;
+  }
+
+  addListeners() {
     $(document).keydown(e =>{
       e.preventDefault();
       switch(e.which) {
@@ -112,8 +120,17 @@ class View{
       }
     });
 
-    this.snakeMoves = setInterval(()=> this.step(), 200);
-    this.scoreEl = $(".score");
+    this.buttonEl.on('click', () => {
+      if (!this.paused) {
+        clearInterval(this.snakeMoves);
+        this.buttonEl.html('<i class="fa fa-play"></i>');
+        this.paused = true;
+      } else {
+        this.snakeMoves = setInterval(()=> this.step(), 300);
+        this.buttonEl.html('<i class="fa fa-pause"></i>');
+        this.paused = false;
+      }
+    });
   }
 
   step(){
