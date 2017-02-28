@@ -161,17 +161,11 @@ class Board{
   }
 
   render() {
-    // const head = this.snake.head();
-    // const tail = this.snake.segments[0];
-    //
-    // $(`li[pos="${tail[0]}, ${tail[1]}"]`).removeClass("snake-body");
-    // $(`li[pos="${head[0]}, ${head[1]}"]`).addClass("snake-body");
+    const head = this.snake.head();
+    const tail = this.snake.removedTail;
 
-    $(".snake-body").removeClass("snake-body");
-
-    this.snake.segments.forEach(coord => {
-      $(`li[pos="${coord[0]}, ${coord[1]}"]`).addClass("snake-body");
-    });
+    if (tail) $(`li[pos="${tail[0]}, ${tail[1]}"]`).removeClass("snake-body");
+    $(`li[pos="${head[0]}, ${head[1]}"]`).addClass("snake-body");
   }
 
   resetApple() {
@@ -236,6 +230,7 @@ class Snake {
     this.direction = "N";
     this.segments = [[10,10]];
     this.addOns = 0;
+    this.removedTail = null;
   }
 
   head() {
@@ -253,9 +248,10 @@ class Snake {
     // remove snake's "tail" unless an apple has recently been hit
     if (this.addOns) {
       this.addOns--;
+      this.removedTail = null;
     }
     else {
-      this.segments.shift();
+      this.removedTail = this.segments.shift();
     }
   }
 

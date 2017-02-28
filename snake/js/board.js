@@ -16,17 +16,11 @@ class Board{
   }
 
   render() {
-    // const head = this.snake.head();
-    // const tail = this.snake.segments[0];
-    //
-    // $(`li[pos="${tail[0]}, ${tail[1]}"]`).removeClass("snake-body");
-    // $(`li[pos="${head[0]}, ${head[1]}"]`).addClass("snake-body");
+    const head = this.snake.head();
+    const tail = this.snake.removedTail;
 
-    $(".snake-body").removeClass("snake-body");
-
-    this.snake.segments.forEach(coord => {
-      $(`li[pos="${coord[0]}, ${coord[1]}"]`).addClass("snake-body");
-    });
+    if (tail) $(`li[pos="${tail[0]}, ${tail[1]}"]`).removeClass("snake-body");
+    $(`li[pos="${head[0]}, ${head[1]}"]`).addClass("snake-body");
   }
 
   resetApple() {

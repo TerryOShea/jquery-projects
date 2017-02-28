@@ -17,6 +17,7 @@ class Snake {
     this.direction = "N";
     this.segments = [[10,10]];
     this.addOns = 0;
+    this.removedTail = null;
   }
 
   head() {
@@ -34,9 +35,10 @@ class Snake {
     // remove snake's "tail" unless an apple has recently been hit
     if (this.addOns) {
       this.addOns--;
+      this.removedTail = null;
     }
     else {
-      this.segments.shift();
+      this.removedTail = this.segments.shift();
     }
   }
 
