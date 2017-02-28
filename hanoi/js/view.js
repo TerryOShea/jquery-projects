@@ -10,7 +10,7 @@ class HanoiView{
   }
   setupTowers(){
     for(let i = 0; i<3; i++){
-      let $tower = $("<ul></ul>");
+      let $tower = $(`<ul class="tower-${i}"></ul>`);
       for(let j = 2; j>=0; j--){
         let block = $("<li></li>").attr("pos", `${i}, ${j}`);
         $tower.append(block);
@@ -45,6 +45,7 @@ class HanoiView{
   }
   clickTower(clickedTower){
     if(Number.isInteger(this.fromTower)){
+      $(".highlighted").removeClass("highlighted");
       if(this.game.move(this.fromTower, clickedTower)){
         this.render();
         if (this.game.isWon()){
@@ -54,7 +55,8 @@ class HanoiView{
         alert("not valid move");
       }
       this.fromTower = undefined;
-    }else{
+    } else {
+      $(`.tower-${clickedTower}`).addClass('highlighted');
       this.fromTower = clickedTower;
       console.log(this.fromTower);
     }

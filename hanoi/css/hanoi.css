@@ -40,3 +40,7 @@ li{
 .little{
   width: 60px;
 }
+
+.highlighted {
+  background: #FFF78A;
+}
