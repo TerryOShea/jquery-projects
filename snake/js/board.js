@@ -16,18 +16,23 @@ class Board{
   }
 
   render() {
+    // const head = this.snake.head();
+    // const tail = this.snake.segments[0];
+    //
+    // $(`li[pos="${tail[0]}, ${tail[1]}"]`).removeClass("snake-body");
+    // $(`li[pos="${head[0]}, ${head[1]}"]`).addClass("snake-body");
+
     $(".snake-body").removeClass("snake-body");
-    $(".apple").removeClass("apple");
-    this.snake.segments.forEach(seg => {
-      seg.forEach(coord => {
-        $(`li[pos="${coord[0]}, ${coord[1]}"]`).addClass("snake-body");
-      });
+
+    this.snake.segments.forEach(coord => {
+      $(`li[pos="${coord[0]}, ${coord[1]}"]`).addClass("snake-body");
     });
-    $(`li[pos="${this.apple[0]}, ${this.apple[1]}"]`).addClass("apple");
   }
 
   resetApple() {
+    $(".apple").removeClass("apple");
     this.apple = this.emptySpace();
+    $(`li[pos="${this.apple[0]}, ${this.apple[1]}"]`).addClass("apple");
   }
 
   isOver() {
@@ -35,7 +40,7 @@ class Board{
     if (head[0] < 0 || head[1] < 0) return true;
     if (head[0] > 19 || head[1] > 19) return true;
 
-    const snakeCoords = this.snake.snakeCoords();
+    const snakeCoords = this.snake.segments;
     for (let i = 0; i < snakeCoords.length - 1; i++) {
       if (snakeCoords[i][0] === head[0] && snakeCoords[i][1] === head[1]) {
         return true;

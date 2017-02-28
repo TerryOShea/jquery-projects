@@ -12,55 +12,42 @@ const oppositeDir = {
   "W": "E"
 };
 
-class Snake{
-  constructor(){
+class Snake {
+  constructor() {
     this.direction = "N";
-    this.segments = [[[10,10]]];
+    this.segments = [[10,10]];
     this.addOns = 0;
   }
 
   head() {
-    let lastSeg = this.segments[this.segments.length -1];
-    if(lastSeg.length === 0) {
-      let secondLast = this.segments[this.segments.length -2];
-      return secondLast[secondLast.length -1];
-    } else {
-      return lastSeg[lastSeg.length-1];
-    }
+    return this.segments[this.segments.length - 1];
   }
 
-  move(){
+  move() {
+    // add new "head" to snake
     const d = dirDeltas[this.direction];
     let newHead = [...this.head()];
     newHead[0] += d[0];
     newHead[1] += d[1];
+    this.segments.push(newHead);
 
-    let lastSeg = this.segments[this.segments.length -1];
-    lastSeg.push(newHead);
-
+    // remove snake's "tail" unless an apple has recently been hit
     if (this.addOns) {
       this.addOns--;
     }
     else {
-      this.segments[0].shift();
-      if(this.segments[0].length === 0) this.segments.shift();
+      this.segments.shift();
     }
   }
 
-  turn(newDir){
-    if (newDir !== oppositeDir[this.direction]){
-      this.segments.push([]);
+  turn(newDir) {
+    if (newDir !== oppositeDir[this.direction]) {
       this.direction = newDir;
     }
   }
 
-  snakeCoords() {
-    let flatten = arr => arr.reduce((acc, val) => acc.concat(val), []);
-    return flatten(this.segments);
-  }
-
   hasSnake(pos) {
-    return this.snakeCoords().some(c => c[0] === pos[0] && c[1] === pos[1]);
+    return this.segments.some(c => c[0] === pos[0] && c[1] === pos[1]);
   }
 }
 

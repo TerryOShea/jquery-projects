@@ -63,27 +63,14 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const View = __webpack_require__(1); 
-
-$( () => {
-  const $container = $('.snake');
-  const v = new View($container);
-  v.board.render();
-});
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Board = __webpack_require__(2);
+const Board = __webpack_require__(1);
 
 class View{
   constructor($el){
@@ -153,10 +140,10 @@ module.exports = View;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Snake = __webpack_require__(3);
+const Snake = __webpack_require__(2);
 class Board{
   constructor($el){
     this.snake = new Snake();
@@ -174,18 +161,23 @@ class Board{
   }
 
   render() {
+    // const head = this.snake.head();
+    // const tail = this.snake.segments[0];
+    //
+    // $(`li[pos="${tail[0]}, ${tail[1]}"]`).removeClass("snake-body");
+    // $(`li[pos="${head[0]}, ${head[1]}"]`).addClass("snake-body");
+
     $(".snake-body").removeClass("snake-body");
-    $(".apple").removeClass("apple");
-    this.snake.segments.forEach(seg => {
-      seg.forEach(coord => {
-        $(`li[pos="${coord[0]}, ${coord[1]}"]`).addClass("snake-body");
-      });
+
+    this.snake.segments.forEach(coord => {
+      $(`li[pos="${coord[0]}, ${coord[1]}"]`).addClass("snake-body");
     });
-    $(`li[pos="${this.apple[0]}, ${this.apple[1]}"]`).addClass("apple");
   }
 
   resetApple() {
+    $(".apple").removeClass("apple");
     this.apple = this.emptySpace();
+    $(`li[pos="${this.apple[0]}, ${this.apple[1]}"]`).addClass("apple");
   }
 
   isOver() {
@@ -193,7 +185,7 @@ class Board{
     if (head[0] < 0 || head[1] < 0) return true;
     if (head[0] > 19 || head[1] > 19) return true;
 
-    const snakeCoords = this.snake.snakeCoords();
+    const snakeCoords = this.snake.segments;
     for (let i = 0; i < snakeCoords.length - 1; i++) {
       if (snakeCoords[i][0] === head[0] && snakeCoords[i][1] === head[1]) {
         return true;
@@ -222,7 +214,7 @@ module.exports = Board;
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports) {
 
 const dirDeltas = {
@@ -239,59 +231,59 @@ const oppositeDir = {
   "W": "E"
 };
 
-class Snake{
-  constructor(){
+class Snake {
+  constructor() {
     this.direction = "N";
-    this.segments = [[[10,10]]];
+    this.segments = [[10,10]];
     this.addOns = 0;
   }
 
   head() {
-    let lastSeg = this.segments[this.segments.length -1];
-    if(lastSeg.length === 0) {
-      let secondLast = this.segments[this.segments.length -2];
-      return secondLast[secondLast.length -1];
-    } else {
-      return lastSeg[lastSeg.length-1];
-    }
+    return this.segments[this.segments.length - 1];
   }
 
-  move(){
+  move() {
+    // add new "head" to snake
     const d = dirDeltas[this.direction];
     let newHead = [...this.head()];
     newHead[0] += d[0];
     newHead[1] += d[1];
+    this.segments.push(newHead);
 
-    let lastSeg = this.segments[this.segments.length -1];
-    lastSeg.push(newHead);
-
+    // remove snake's "tail" unless an apple has recently been hit
     if (this.addOns) {
       this.addOns--;
     }
     else {
-      this.segments[0].shift();
-      if(this.segments[0].length === 0) this.segments.shift();
+      this.segments.shift();
     }
   }
 
-  turn(newDir){
-    if (newDir !== oppositeDir[this.direction]){
-      this.segments.push([]);
+  turn(newDir) {
+    if (newDir !== oppositeDir[this.direction]) {
       this.direction = newDir;
     }
   }
 
-  snakeCoords() {
-    let flatten = arr => arr.reduce((acc, val) => acc.concat(val), []);
-    return flatten(this.segments);
-  }
-
   hasSnake(pos) {
-    return this.snakeCoords().some(c => c[0] === pos[0] && c[1] === pos[1]);
+    return this.segments.some(c => c[0] === pos[0] && c[1] === pos[1]);
   }
 }
 
 module.exports = Snake;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const View = __webpack_require__(0); 
+
+$( () => {
+  const $container = $('.snake');
+  const v = new View($container);
+  v.board.render();
+});
 
 
 /***/ })
